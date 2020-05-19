@@ -51,37 +51,100 @@ int main(int argc, char *argv[]) {
         */
         char ** fileData = NULL;
 
-        int success = getDataFromFile(fileNameToOpen, fileData);
-        printf("%d\n", success);
+        //int success = getDataFromFile(fileNameToOpen, fileData);
+        //printf("%d\n", success);
+
+        FILE * dataFile;
+        char tempLine[120];
+        //char ** info = NULL;
+        int llen;
+        int counter = 0;
+        dataFile = fopen(fileNameToOpen, "r");
+        //check if fopen could not open file
+        if(!dataFile)
+        {
+            //if could not open file
+            printf("Could not open file!\n");
+            printf("Make sure file is in the same folder as executable, exiting application\n");
+            return 4;
+        }
+        //checking if openef file is empty
+        fseek (dataFile, 0, SEEK_END);
+        int filesize = ftell(dataFile);
+        if(filesize == 0)
+        {
+            printf("Provided file is empty, exiting application\n");
+            return 5;
+
+        }
+        fseek (dataFile, 0, SEEK_SET);
+
+
+
+        while (fgets(tempLine, 120, dataFile)) {
+
+            if(tempLine[0] == 32 || tempLine[0] == 0 || tempLine[0] == 10)
+            {
+                printf("It's an empty line!\n");
+            } else {
+                // Allocate memory for pointer to tempLine just added
+                fileData = realloc(fileData,(counter+1) * sizeof(char *));
+                // And allocate memory for that tempLine itself!k
+
+                char *firstWord = strtok(tempLine, " \t\n\f");
+                printf("size of line %d is %d\n",counter,strlen(tempLine));
+                llen = strlen(firstWord);
+                printf("%s\n", firstWord);
+                fileData[counter] = calloc(sizeof(char), llen + 1);
+                // Copy the tempLine just read into that memory
+                //strcpy(fileData[counter], tempLine);
+                strcpy(fileData[counter], firstWord);
+                //strncpy(fileData[counter], tempLine, strcspn(tempLine, " "));
+                //adding end of string just in case it wont get added when copying first words
+                //fileData[counter][strlen(firstWord)] = '\0';
+                //printf("%s\n", fileData[counter]);
+
+                counter++;
+            }
+        }
+
+        for (int i = 0; i < counter ; i++) {
+            printf("%d: %s \n",sizeof(fileData[i]),fileData[i]);
+        }
+        printf("\n");
+
 
         //printf("%s\n", fileData[0]);
+        //int size = sizeof(fileData[0]);
+        //printf(" array size: %d\n", size);
+
 
         initMatrix0();
 
-
+        /*
         insert("dog");
         insert("camel");
         insert("chinchilla");
         insert("falcon");
         insert("deer");
         insert("on");
-        insert("sitax");
         insert("vana");
-        insert("Tramaeiv6i");
-        insert("Juden");
-        insert("E");
-        insert("Juudi");
-        insert("Gaz63");
+        */
 
-        insert("masin");
+        for(int i = 0; i < counter ; i++)
+        {
+            insert(fileData[i]);
+        }
+
         printMatrix();
-        //insert("Liigapikkraisk");
 
+        for(int i = 0; i < counter ; i++)
+        {
+            free(fileData[i]);
+        }
+        free(fileData);
 
     }
-    //printf("\n\n\n");
-
-    //scan();
     return 0;
 }
 
