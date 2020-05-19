@@ -49,10 +49,12 @@ int main(int argc, char *argv[]) {
         printf("\n");
          printf("%s\n", fileNameToOpen);
         */
-        char ** fileData;
+        char ** fileData = NULL;
 
-        int success = getDataFromFile(fileNameToOpen, &fileData);
+        int success = getDataFromFile(fileNameToOpen, fileData);
         printf("%d\n", success);
+
+        //printf("%s\n", fileData[0]);
 
         initMatrix0();
 
@@ -259,7 +261,6 @@ int getDataFromFile(char *filename, char **data) {
     //char ** info = NULL;
     int llen;
     int counter = 0;
-    int backdown;
     dataFile = fopen(filename, "r");
     //check if fopen could not open file
     if(!dataFile)
@@ -296,8 +297,8 @@ int getDataFromFile(char *filename, char **data) {
         counter++;
     }
 
-    for (backdown = counter-1; backdown >= 0; backdown--) {
-        printf("%d: %s",backdown,data[backdown]);
+    for (int i = 0; i < counter ; i++) {
+        printf("%d: %s",i,data[i]);
     }
 }
 
